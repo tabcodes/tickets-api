@@ -1,0 +1,51 @@
+version: "3.9"
+services:
+  web:
+    container_name: ti_web
+    build: docker/nginx
+    restart: on-failure
+    links:
+      - php
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./application:/var/www/html
+      - ./docker/nginx/ssl:/etc/ssl
+    networks:
+      - backend
+  php:
+    container_name: ti_php
+    build:
+      args:
+        user: deployer
+        uid: 1000
+      context: ./docker/php
+    volumes:
+      - ./application:/var/www/html
+    # links:
+    #   - db
+    working_dir: /var/www/html/
+    command: php-fpm
+    ports:
+      - 9000
+    env_file: ./application/.env
+    networks:
+      - backend
+  db:
+    image: mysql:8
+    container_name: ti_db
+    command: --default-authentication-plugin=mysql_native_password # needed as of mysql 8
+    ports:
+      - 3306:3306
+    env_file: .dockerenv
+    networks:
+      - backend
+  cache:
+    container_name: ti_cache
+    image: memcached:1.6-alpine
+    networks:
+      - backend
+
+networks:
+  backend:
