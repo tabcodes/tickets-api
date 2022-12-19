@@ -8,7 +8,7 @@ ARG uid
 RUN docker-php-ext-install mysqli pdo_mysql
 
 # memcached
-ENV MEMCACHED_DEPS zlib1g-dev libz-dev libmemcached-dev
+ENV MEMCACHED_DEPS zlib1g-dev libz-dev libmemcached-dev memcached
 RUN apt-get update && apt-get install -y nano bash
 RUN set -xe \
     # && apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS \

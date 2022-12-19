@@ -41,11 +41,6 @@ services:
     env_file: .dockerenv
     networks:
       - backend
-  cache:
-    container_name: ti_cache
-    image: memcached:1.6-alpine
-    networks:
-      - backend
 
 networks:
   backend:
